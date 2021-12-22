@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="heading"><h2><span class="tic">Tic</span><span class="dash">-</span><span class="tac">Tac</span><span class="dash">-</span><span class="toe">Toe</span></h2></div>
+        <div class="game-container">
+            <div class="player-indicator">
+                <div><span class="X" id="X">X</span></div>
+                <div><span class="" id="O">O</span></div>
+            </div>
+            <button class="btn right bottom" value='0'></button>
+            <button class="btn bottom" value='1'></button>
+            <button class="btn left bottom" value='2'></button>
+
+            <button class="btn right " value='3'></button>
+            <button class="btn" value='4'></button>
+            <button class="btn left" value='5'></button>
+
+            <button class="btn right top" value='6'></button>
+            <button class="btn top" value='7'></button>
+            <button class="btn left top" value='8'></button>
+
+            <div class="left-line"></div>
+            <div class="right-line"></div>
+            <div class="top-line"></div>
+            <div class="bottom-line"></div>
+            
+        </div>
+        
+        <button class="resetbtn">Reset</button>
+        <div class="result-box">
+            <div>
+            <p id="result-text">X Wins</p>
+           
+            <button class="closebtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+
+        
+        //Getting the elements using their Id's and class names
+        let btns = document.getElementsByClassName('btn')
+        let resetButton = document.getElementsByClassName('resetbtn')[0]
+        let resultText = document.getElementById('result-text')
+        let resultBox = document.getElementsByClassName('result-box')[0]
+        let closeButton = document.getElementsByClassName('closebtn')[0]
+        let player_x = document.getElementById('X');
+        let player_o = document.getElementById('O');
+
+        //Declaring some variables 
+        let currentPlayer = ''
+        let moves = 0
+        let win = false
+        let winner = ''
+        let visitedCells = ['','','','','','','','','']
+        const WINNING_COMBINATIONS = [
+            [0,1,2], [0,3,6], [0,4,8],
+            [1,4,7], [2,5,8], [3,4,5],
+            [5,2,8], [6,7,8], [2,4,6]
+      
+        ]
+
+       //This will set eventlisteners to all buttons
+       setEventListener()
+       
+       //Close and Reset
+       function closeResultBox() {
+        resultBox.style.display = "none"
+        resetBoard()
+       }
+       //Make the Result div visible 
+       function setResult(result) {
+
+            resultBox.style.display = "flex"
+            resultText.textContent = result
+       }
+
+       //For making the board to initial state
+       function resetBoard() {
+
+            currentPlayer = ''
+            moves = 0
+            win = false
+            for(let cell=0;cell<=8;cell++) {
+                visitedCells[cell] = ''
+            } 
+            Object.entries(btns).forEach( btn => {
+                btn[1].textContent = ''
+            })
+            
+            setEventListener() 
+            resultBox.style.display = "none"
+            player_o.classList.remove('O')
+            player_x.classList.add('X')
+            
+            
+           
+       }
+        //For winning and draw declaration
+        function find_win_or_draw() {
+
+           
+           for(let combi = 0;combi<=8;combi++) {
+               
+
+                let combination = WINNING_COMBINATIONS[combi]
+                
+                if( ( visitedCells[combination[0]] != '' && 
+                    visitedCells[combination[1]] != '' && 
+                    visitedCells[combination[2]] ) && 
+                    (  visitedCells[combination[0]] === visitedCells[combination[1]] 
+                       && visitedCells[combination[1]] === visitedCells[combination[2]]
+                    ) ) {
+                        
+                        win = true
+                        winner = visitedCells[combination[0]]
+                        break
+                    }
+                
+
+           }
+           if(win) {
+                setResult( winner +" Wins!")               
+
+           }
+           if(moves == 9 && win == false) {
+               setResult("It's a Tie!")
+           }
+            
+        }
+        //Setting up the value of the cell and next player setter
+        function setCellValue(event) {
+
+            
+            if(currentPlayer === '') {
+                currentPlayer = 'X'
+                event.target.textContent = currentPlayer
+                player_x.classList.remove('X')
+                player_o.classList.add('O')
+            }
+            else if(currentPlayer === 'X') {
+
+                currentPlayer = 'O'
+                event.target.textContent = currentPlayer
+                player_o.classList.remove('O')
+                player_x.classList.add('X')
+            }
+            else if(currentPlayer === 'O') {
+
+                currentPlayer = 'X'
+                event.target.textContent = currentPlayer
+                player_x.classList.remove('X')
+                player_o.classList.add('O')
+                
+            }
+            
+
+            visitedCells[parseInt(event.target.value)] = event.target.textContent
+        }
+        //Setting the x or o values on clicking
+        function handlePlayerClicks(event) {
+            
+            ++moves
+          
+            setCellValue(event)
+         
+            if( moves >= 4 ) {
+                find_win_or_draw();
+            }
+
+        }
+        
+       
+
+        
+    
+        //Setting eventlisteners for all buttons
+        function setEventListener() {
+
+       
+            resetButton.addEventListener('click',resetBoard)
+            closeButton.addEventListener('click',closeResultBox)
+            Object.entries(btns).forEach(btn => {
+            
+            
+
+            btn[1].addEventListener('click' , handlePlayerClicks , { once: true })
+         
+            });
+        }   
+       
+       
+    </script>
+</body>
+</html>
