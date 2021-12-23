@@ -187,5 +187,29 @@ div>span {
    0 0 20px var(--switch-color) , 
    0 0 40px var(--switch-color); 
 }
+@media  screen and (max-width:500px) {
+
+    .heading {
+        letter-spacing: 3px;
+    }
+    .heading h2 {
+        font-size: 2.5rem;
+    }
+
+    .result-box {
+        font-size: 1.5rem;
+        width: 40%;
+    }
+    .closebtn {
+        
+        padding: 5px;
+    }
+    
+}
+@media screen and (max-height:650px) {
+    .game-container {
+        transform: scale(0.5);
+    }
+}
 
 
